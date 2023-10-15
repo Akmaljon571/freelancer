@@ -25,6 +25,18 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('Freelancer Swagger App')
+    .setDescription('My App API documentation')
+    .addBearerAuth(
+      {
+        description: `[just text field] Please enter token in following format: Bearer <JWT>`,
+        name: 'Authorization',
+        bearerFormat: 'Bearer',
+        scheme: 'Bearer',
+        type: 'http',
+        in: 'Header',
+      },
+      'access-token',
+    )
     .setVersion('1.0')
     .build();
 

@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegistrAuthDto } from './dto/registr-auth.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { IReturnMsg, IReturnToken } from './types';
 
@@ -44,8 +44,13 @@ export class AuthController {
     return this.authService.registrCode(code);
   }
 
-  // @Get('/token')
-  // token(@Req() req: Request) {
-  //   return this.authService.token(req);
-  // }
+  @Get('/token')
+  @ApiHeader({
+    required: true,
+    description: 'RefreshToken',
+    name: 'Authorization',
+  })
+  token(@Req() req: Request) {
+    return this.authService.token(req.token);
+  }
 }

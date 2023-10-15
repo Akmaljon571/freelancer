@@ -1,10 +1,12 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
+import { Who } from '../module/auth/types';
 
 interface iResult {
   id: string;
   email: string;
+  role: Who;
 }
 
 @Injectable()

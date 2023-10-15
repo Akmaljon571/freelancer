@@ -76,11 +76,14 @@ export class AuthService {
       const access_token = this.jwt.AccesSign({
         id: findEmployee.id,
         email: findEmployee.email,
+        role: Who.employee,
       });
       const refresh_token = this.jwt.RefreshSign({
         id: findEmployee.id,
         email: findEmployee.email,
+        role: Who.employee,
       });
+      this.redis.set(refresh_token, refresh_token);
 
       return {
         access_token,
@@ -95,10 +98,12 @@ export class AuthService {
       const access_token = this.jwt.AccesSign({
         id: findEmployer.id,
         email: findEmployer.email,
+        role: Who.employer,
       });
       const refresh_token = this.jwt.RefreshSign({
         id: findEmployer.id,
         email: findEmployer.email,
+        role: Who.employer,
       });
 
       return {
@@ -170,11 +175,14 @@ export class AuthService {
       const access_token = this.jwt.AccesSign({
         id: findEmployee.id,
         email: findEmployee.email,
+        role: Who.employee,
       });
       const refresh_token = this.jwt.RefreshSign({
         id: findEmployee.id,
         email: findEmployee.email,
+        role: Who.employee,
       });
+      this.redis.set(refresh_token, refresh_token);
 
       return {
         access_token,
@@ -194,10 +202,12 @@ export class AuthService {
       const access_token = this.jwt.AccesSign({
         id: findEmployer.id,
         email: findEmployer.email,
+        role: Who.employer,
       });
       const refresh_token = this.jwt.RefreshSign({
         id: findEmployer.id,
         email: findEmployer.email,
+        role: Who.employer,
       });
 
       return {
@@ -206,6 +216,28 @@ export class AuthService {
       };
     } else {
       throw new BadRequestException('Bad Request in code');
+    }
+  }
+
+  async token(refresh_token: string) {
+    try {
+      const oldToken = await this.redis.get(refresh_token);
+      if (!oldToken) {
+        throw new Error();
+      }
+      const verifyUser: any = this.jwt.RefreshVerify(refresh_token);
+      const access_token = this.jwt.AccesSign({
+        id: verifyUser.id,
+        email: verifyUser.email,
+        role: verifyUser.role,
+      });
+
+      return {
+        access_token,
+        refresh_token,
+      };
+    } catch (error) {
+      throw new BadRequestException('Bad Request in Token');
     }
   }
 }

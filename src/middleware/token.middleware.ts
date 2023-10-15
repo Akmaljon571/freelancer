@@ -7,6 +7,7 @@ import {
 import { Request, Response, NextFunction } from 'express';
 import { JwtService } from '../token/jwt.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { Who } from '../module/auth/types';
 
 @Injectable()
 export class TokenMiddleWare implements NestMiddleware {
@@ -17,12 +18,11 @@ export class TokenMiddleWare implements NestMiddleware {
 
   async use(req: Request, _: Response, next: NextFunction) {
     const path = req.params[0];
+    const token = req.headers.authorization;
+    const accessToken = token?.split('Bearer ')[1];
 
-    if (path === 'auth/login' || path === 'auth/registr') {
-      next();
-    } else if (path === 'auth/token') {
+    if (path === 'auth/token') {
       try {
-        const token = req.headers.refresh;
         if (token && typeof token === 'string') {
           req.token = token;
           next();
@@ -33,23 +33,33 @@ export class TokenMiddleWare implements NestMiddleware {
         throw new ForbiddenException('Invalid or missing Authorization header');
       }
     } else {
-      const bearer = req.headers.authorization;
-      const token = bearer.split('Bearer ')[1];
-      if (token || typeof token === 'string') {
+      if (accessToken || typeof accessToken === 'string') {
         const verify: any = this.jwt.AccesVerify(token);
         try {
-          // const verifyUser = await this.prisma.users.findUnique({
-          //   where: { name: verify.name, password: verify.password },
-          // });
+          if (verify.role === Who.employee) {
+            const verifyUser = await this.prisma.employee.findUnique({
+              where: { id: verify.id, email: verify.email },
+            });
 
-          req.user_id = verify.id;
-          next();
+            req.user_id = verifyUser.id;
+            next();
+          } else if (verify.role === Who.employer) {
+            const verifyUser = await this.prisma.employer.findUnique({
+              where: { id: verify.id, email: verify.email },
+            });
+
+            req.user_id = verifyUser.id;
+            next();
+          } else {
+            throw new Error();
+          }
         } catch (error) {
           throw new BadRequestException('Bad Request in Token');
         }
       } else {
         throw new BadRequestException('Invalid or missing token');
       }
+      next();
     }
   }
 }
