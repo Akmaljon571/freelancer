@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { RedisService } from './redis.service';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [
     RedisModule.forRoot({
       config: {
-        host: 'localhost',
-        port: 6379,
-        password: 'mypass',
+        url: process.env.REDIS_URL,
       },
     }),
   ],

@@ -5,13 +5,18 @@ import { RedisService as NestJsRedisService } from '@liaoliaots/nestjs-redis';
 export class RedisService {
   constructor(private readonly nestJsRedisService: NestJsRedisService) {}
 
-  async set(key: string, value: string): Promise<void> {
+  async set(key: string, value: any): Promise<void> {
     const client = this.nestJsRedisService.getClient();
-    await client.set(key, value);
+    await client.set(key, JSON.stringify(value));
+  }
+
+  async del(key: string) {
+    const client = this.nestJsRedisService.getClient();
+    await client.del(key);
   }
 
   async get(key: string): Promise<string | null> {
     const client = this.nestJsRedisService.getClient();
-    return client.get(key);
+    return JSON.parse(await client.get(key));
   }
 }

@@ -1,0 +1,183 @@
+datasource db {
+    url = env("DATABASE_URL")
+    provider = "postgresql"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Employee {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))
+    full_name           String          @map("full_name")           @db.Text
+    date_of_birth       String          @map("date_of_birth")       @db.Text
+    passport_series     String          @map("passport_series")     @db.Text            @unique
+    about_me            String?         @map("about_me")            @db.Text
+    project_count       Int             @map("project_count")       @db.Integer         @default(0)
+    website             String?         @map("website")             @db.Text
+    phone               String?         @map("phone")               @db.Text            @unique
+    email               String          @map("email")               @db.Text            @unique
+    avatar              String          @map("avatar")              @db.Text
+    stars               Int             @map("stars")               @db.Integer         @default(0)
+    reject              Int             @map("reject")              @db.Integer         @default(0)
+    in_process          Int             @map("in_process")          @db.Integer         @default(0)
+    resolve             Int             @map("resolve")             @db.Integer         @default(0)
+    state               String          @map("state")               @db.Text            
+    city                String          @map("city")                @db.Text
+    general_skill       String?         @map("general_skill")       @db.Text
+    create_at           DateTime        @map("create_at")           @db.Date            @default(now())       
+    payment             Payment[]   
+    petition            Petition[]
+    course              EmployeeCourses[]
+    skill               EmployeeSkills[]
+
+    @@id([ id ])
+    @@map("employee")
+}
+
+model Team {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))
+    title               String          @map("title")               @db.Text            @unique
+
+    @@id([ id ])
+    @@map("team")
+}
+
+model Employer {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))
+    full_name           String          @map("full_name")           @db.Text
+    date_of_birth       String          @map("date_of_birth")       @db.Text
+    passport_series     String          @map("passport_series")     @db.Text            @unique
+    state               String          @map("state")               @db.Text
+    avatar              String          @map("avatar")              @db.Text
+    city                String          @map("city")                @db.Text
+    phone               String?         @map("phone")               @db.Text            @unique
+    email               String          @map("email")               @db.Text            @unique
+    create_at           DateTime        @map("create_at")           @db.Date            @default(now())
+    work                Work[]
+    payment             Payment[]
+    petition            Petition[]
+
+    @@id([ id ])
+    @@map("employer")
+}
+
+model Work {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))
+    title               String          @map("title")               @db.Text
+    term                String          @map("term")                @db.Text
+    price               String          @map("price")               @db.Text
+    file_and_link       String          @map("file_and_link")       @db.Text
+    description         String          @map("description")         @db.Text
+    create_at           DateTime        @map("create_at")           @db.Date            @default(now())
+    employer_id         String          @map("employer_id")         @db.Uuid            
+    employer            Employer                                    @relation(fields: [employer_id], references: [id])
+    payment             Payment[]
+    petition            Petition[]
+    work_skills         WorkSkills[]
+
+    @@id([ id ])
+    @@map("work")
+}
+
+model Courses {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))    
+    title               String          @map("title")               @db.Text
+    video               Videos[]
+    test                Test[]
+    employee            EmployeeCourses[]
+
+    @@id([ id ])
+    @@map("courses")
+}
+
+model Videos {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))    
+    video_link          String          @map("video_link")          @db.Text
+    course_id           String          @map("course_id")           @db.Uuid
+    course              Courses         @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+    @@id([ id ])
+    @@map("videos")
+}
+
+model Test {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))    
+    test                String          @map("test")                @db.Text
+    course_id           String          @map("course_id")           @db.Uuid
+    course              Courses         @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+    @@id([ id ])
+    @@map("test")
+}
+
+model Skills {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))    
+    skill               String          @map("skill")               @db.Text
+    work                WorkSkills[]
+    employee            EmployeeSkills[]
+
+    @@id([ id ])
+    @@map("skills")
+}
+
+model Payment {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))    
+    work_id             String          @map("work_id")             @db.Uuid
+    employee_id         String          @map("employee_id")         @db.Uuid
+    employer_id         String          @map("employer_id")         @db.Uuid
+    work                Work            @relation(fields: [work_id], references: [id], onDelete: NoAction)
+    employee            Employee        @relation(fields: [employee_id], references: [id], onDelete: NoAction)
+    employer            Employer        @relation(fields: [employer_id], references: [id], onDelete: NoAction)
+    create_at           DateTime        @map("create_at")           @db.Date            @default(now())       
+
+    @@id([ id ])
+    @@map("payment")
+}
+
+model Petition {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))    
+    work_id             String          @map("work_id")             @db.Uuid
+    employee_id         String          @map("employee_id")         @db.Uuid
+    employer_id         String          @map("employer_id")         @db.Uuid
+    work                Work            @relation(fields: [work_id], references: [id], onDelete: NoAction)
+    employee            Employee        @relation(fields: [employee_id], references: [id], onDelete: NoAction)
+    employer            Employer        @relation(fields: [employer_id], references: [id], onDelete: NoAction)
+    create_at           DateTime        @map("create_at")           @db.Date            @default(now())       
+
+    @@id([ id ])
+    @@map("petition")
+}
+
+model EmployeeCourses {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))    
+    employee_id         String          @map("employee_id")         @db.Uuid
+    course_id           String          @map("course_id")           @db.Uuid
+    employee            Employee        @relation(fields: [employee_id], references: [id], onDelete: NoAction)
+    course              Courses         @relation(fields: [course_id], references: [id], onDelete: NoAction)
+
+    @@id([ id ])
+    @@map("employee_courses")
+}
+
+model WorkSkills {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))
+    work_id             String          @map("work_id")             @db.Uuid
+    skill_id            String          @map("skils_id")            @db.Uuid
+    work                Work            @relation(fields: [work_id], references: [id], onDelete: NoAction)
+    skill               Skills          @relation(fields: [skill_id], references: [id], onDelete: NoAction)
+
+    @@id([ id ])
+    @@map("work_skills")
+}
+
+model EmployeeSkills {
+    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))
+    employee_id         String          @map("employee_id")         @db.Uuid
+    skill_id            String          @map("skils_id")            @db.Uuid
+    employee            Employee        @relation(fields: [employee_id], references: [id], onDelete: NoAction)
+    skill               Skills          @relation(fields: [skill_id], references: [id], onDelete: NoAction)
+
+    @@id([ id ])
+    @@map("employee_skills")
+}

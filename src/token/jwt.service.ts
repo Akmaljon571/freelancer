@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 
 interface iResult {
-  name: string;
-  password: string;
+  id: string;
+  email: string;
 }
 
 @Injectable()
