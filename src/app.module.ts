@@ -12,6 +12,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { JwtModule } from './token/jwt.module';
 import { RedisCoreModule } from './cache/redis-core.module';
 import { TokenMiddleWare } from './middleware/token.middleware';
+import { SkillsModule } from './skills/skills.module';
+import { SkillsModule } from './module/skills/skills.module';
+import { EmployeeModule } from './module/employee/employee.module';
 
 @Module({
   imports: [
@@ -21,6 +24,8 @@ import { TokenMiddleWare } from './middleware/token.middleware';
     PrismaModule,
     JwtModule,
     RedisCoreModule,
+    SkillsModule,
+    EmployeeModule,
   ],
 })
 export class AppModule implements NestModule {

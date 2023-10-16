@@ -1,0 +1,5 @@
+employee 
+getOne token boyicha
+getOne id boyicha
+search
+statistika (hozir emas songida)

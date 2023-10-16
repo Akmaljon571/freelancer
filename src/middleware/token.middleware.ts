@@ -19,8 +19,8 @@ export class TokenMiddleWare implements NestMiddleware {
   async use(req: Request, _: Response, next: NextFunction) {
     const path = req.params[0];
     const token = req.headers.authorization;
+    console.log(req.headers);
     const accessToken = token?.split('Bearer ')[1];
-
     if (path === 'auth/token') {
       try {
         if (token && typeof token === 'string') {
