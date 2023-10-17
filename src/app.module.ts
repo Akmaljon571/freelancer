@@ -7,12 +7,10 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import { config } from './config';
 import { AuthModule } from './module/auth/auth.module';
-import { ChatModule } from './module/chat/chat.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { JwtModule } from './token/jwt.module';
 import { RedisCoreModule } from './cache/redis-core.module';
 import { TokenMiddleWare } from './middleware/token.middleware';
-import { SkillsModule } from './skills/skills.module';
 import { SkillsModule } from './module/skills/skills.module';
 import { EmployeeModule } from './module/employee/employee.module';
 
@@ -20,7 +18,6 @@ import { EmployeeModule } from './module/employee/employee.module';
   imports: [
     ConfigModule.forRoot(config),
     AuthModule,
-    ChatModule,
     PrismaModule,
     JwtModule,
     RedisCoreModule,

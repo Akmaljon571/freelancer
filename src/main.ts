@@ -27,6 +27,7 @@ async function bootstrap() {
     .setTitle('Freelancer Swagger App')
     .setDescription('My App API documentation')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

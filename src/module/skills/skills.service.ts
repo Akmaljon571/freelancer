@@ -17,7 +17,10 @@ export class SkillsService {
     return findMany.find((e) => e.skill.includes(search));
   }
 
-  async create({ employee_id, skill_id }: EmployeeSkillsDTO): Promise<void> {
+  async create(
+    { skill_id }: EmployeeSkillsDTO,
+    employee_id: string,
+  ): Promise<void> {
     try {
       await this.prisma.employeeSkills.create({
         data: {
@@ -25,6 +28,27 @@ export class SkillsService {
           skill_id,
         },
       });
+    } catch (err) {
+      throw new NotFoundException('Employee or Skills not found');
+    }
+  }
+
+  async delete(
+    { skill_id }: EmployeeSkillsDTO,
+    employee_id: string,
+  ): Promise<void> {
+    try {
+      const all = await this.prisma.employeeSkills.findMany();
+      const find = all.find(
+        (e) => e.employee_id === employee_id && e.skill_id === skill_id,
+      );
+      if (!find) {
+        throw new NotFoundException('Employee or Skills not found');
+      } else {
+        await this.prisma.employeeSkills.delete({
+          where: { id: find.id },
+        });
+      }
     } catch (err) {
       throw new NotFoundException('Employee or Skills not found');
     }

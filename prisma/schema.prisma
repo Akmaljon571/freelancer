@@ -35,14 +35,6 @@ model Employee {
     @@map("employee")
 }
 
-model Team {
-    id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))
-    title               String          @map("title")               @db.Text            @unique
-
-    @@id([ id ])
-    @@map("team")
-}
-
 model Employer {
     id                  String          @map("id")                  @db.Uuid            @default(dbgenerated("gen_random_uuid()"))
     full_name           String          @map("full_name")           @db.Text
