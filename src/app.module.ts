@@ -13,6 +13,7 @@ import { RedisCoreModule } from './cache/redis-core.module';
 import { TokenMiddleWare } from './middleware/token.middleware';
 import { SkillsModule } from './module/skills/skills.module';
 import { EmployeeModule } from './module/employee/employee.module';
+import { EmployerModule } from './module/employer/employer.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { EmployeeModule } from './module/employee/employee.module';
     RedisCoreModule,
     SkillsModule,
     EmployeeModule,
+    EmployerModule,
   ],
 })
 export class AppModule implements NestModule {

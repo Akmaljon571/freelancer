@@ -1,8 +1,17 @@
-import { Controller, Get, Param, Req, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Req,
+  Query,
+  Patch,
+  Body,
+} from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { Request } from 'express';
 import { Employee } from '@prisma/client';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UpdateDto } from './dto/update.dto';
 
 @Controller('employee')
 @ApiTags('Employee')
@@ -27,5 +36,13 @@ export class EmployeeController {
   @Get('/search')
   saerch(@Query('search') search: string) {
     return this.employeeService.search(search);
+  }
+
+  @Patch()
+  update(
+    @Req() req: Request,
+    @Body() updateEmployeeDto: UpdateDto,
+  ): Promise<void> {
+    return this.employeeService.update(req.user_id, updateEmployeeDto);
   }
 }

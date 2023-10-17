@@ -1,5 +1,6 @@
 employee 
-getOne token boyicha
+getOne token boyicha (skills boycha nechta ish bolsa osha ishlar royxati chiqadi )
 getOne id boyicha
 search
-statistika (hozir emas songida)
+profile update
+phone add ()

@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Employee } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdateDto } from './dto/update.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -22,5 +27,13 @@ export class EmployeeService {
     const findMany = await this.prisma.employee.findMany();
 
     return findMany.find((e) => e.full_name.includes(search));
+  }
+
+  async update(id: string, body: UpdateDto): Promise<void> {
+    try {
+      await this.prisma.employee.update({ where: { id }, data: body });
+    } catch (error) {
+      throw new BadRequestException('Bad Request in Employee data');
+    }
   }
 }
