@@ -17,7 +17,10 @@ export class EmployerService {
 
   async findOne(id: string): Promise<Employer> {
     try {
-      return await this.prisma.employer.findUnique({ where: { id } });
+      return await this.prisma.employer.findUnique({
+        where: { id },
+        include: { work: true },
+      });
     } catch (err) {
       throw new NotFoundException('Employer not found');
     }

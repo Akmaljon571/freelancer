@@ -14,6 +14,7 @@ import { TokenMiddleWare } from './middleware/token.middleware';
 import { SkillsModule } from './module/skills/skills.module';
 import { EmployeeModule } from './module/employee/employee.module';
 import { EmployerModule } from './module/employer/employer.module';
+import { WorkModule } from './module/work/work.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { EmployerModule } from './module/employer/employer.module';
     SkillsModule,
     EmployeeModule,
     EmployerModule,
+    WorkModule,
   ],
 })
 export class AppModule implements NestModule {

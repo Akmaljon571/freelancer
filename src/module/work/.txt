@@ -1,0 +1,7 @@
+work
+create  Employer tekshiruvi                 finish
+update  Employer tekshiruvi                 finish
+delete  Employer tekshiruvi                 finish
+all     hammasi                             finish
+one     Nechta odam ariza topshirgan        middle
+filter  tekshiruvchilar boyicha filter      start
